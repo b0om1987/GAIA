@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}GAIA Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  <aside class="dash-sidebar">
+    <div class="dash-brand">GAIA</div>
+    <nav class="dash-nav">
+      <button class="dash-tab active" data-tab="overview"><span class="tab-num">01</span> System overview</button>
+      <button class="dash-tab" data-tab="inference"><span class="tab-num">02</span> Inference engine</button>
+      <button class="dash-tab" data-tab="clients"><span class="tab-num">03</span> Client API</button>
+      <button class="dash-tab" data-tab="infrastructure"><span class="tab-num">04</span> Infrastructure</button>
+      <button class="dash-tab" data-tab="reports"><span class="tab-num">05</span> Reports</button>
+      <button class="dash-tab geist-tab" data-tab="geist" id="geistTabBtn" style="display:none"><span class="tab-num">06</span> Geist control</button>
+    </nav>
+    <div class="dash-user" id="dashUser"></div>
+    <button class="btn-ghost btn-small" id="logoutBtn">Log out</button>
+  </aside>
+
+  <main class="dash-main">
+    <div class="status-banner" id="statusBanner" style="display:none">
+      ⚠ Containment failure — systems offline
+    </div>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <div class="tab-panel active" id="panel-overview">
+      <div class="panel-head"><h1>System overview</h1></div>
+      <div class="kpi-row" id="kpiRow"></div>
+      <div class="chart-grid-2">
+        <div class="dash-card">
+          <h3>Throughput</h3>
+          <canvas id="chartUsage"></canvas>
+        </div>
+        <div class="dash-card">
+          <h3>Request distribution</h3>
+          <canvas id="chartDist"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-inference">
+      <div class="panel-head"><h1>Inference engine</h1></div>
+      <div class="chart-grid-2">
+        <div class="dash-card">
+          <h3>Request volume</h3>
+          <canvas id="chartVol"></canvas>
+        </div>
+        <div class="dash-card">
+          <h3>Latency</h3>
+          <canvas id="chartLat"></canvas>
+        </div>
+      </div>
+      <div class="dash-card">
+        <h3>Engine logs</h3>
+        <div class="log-panel" id="inferenceLog"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-clients">
+      <div class="panel-head"><h1>Client API</h1></div>
+      <div class="dash-card">
+        <h3>Requests by client</h3>
+        <canvas id="chartClients"></canvas>
+      </div>
+      <div class="dash-card">
+        <h3>Active clients</h3>
+        <div class="data-table-wrap">
+          <table class="data-table" id="clientsTable"></table>
+        </div>
+      </div>
+      <div class="breach-notice">
+        <div class="breach-notice-header">
+          <span class="breach-icon">⚠</span>
+          <span class="breach-title">SECURITY INCIDENT NOTICE — MANDATORY ACTION REQUIRED</span>
+        </div>
+        <div class="breach-notice-body">
+          <p><strong>Notice ID:</strong> SEC-2026-08842</p>
+          <p><strong>Date of Incident:</strong> 2026-10-14 03:47 UTC</p>
+          <p><strong>Affected Systems:</strong> Client API Authentication Database (prod-auth-db-01)</p>
+          <p>
+            On the date and time specified above, our Security Operations Center identified unauthorized access to the production authentication database. 
+            The intrusion was contained within 42 minutes of detection. Our investigation has determined that a subset of production accounts were compromised during this window.
+          </p>
+          <p>
+            As an immediate containment measure, passwords for all affected production accounts were reset to the temporary default: <code>changethisasap</code>. 
+            If your account was impacted, you will be required to authenticate using this temporary credential and immediately set a new password upon next login.
+          </p>
+          <p>
+            We strongly advise all users to review their API key rotations and audit any anomalous access patterns in their client logs. 
+            A full incident report will be made available to authorized security liaisons within 72 hours.
+          </p>
+          <p class="breach-footer">GAIA Systems Security Operations — This notice is classified and intended for authorized personnel only.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-infrastructure">
+      <div class="panel-head"><h1>Infrastructure</h1></div>
+      <div class="chart-grid-2">
+        <div class="dash-card">
+          <h3>Cluster load</h3>
+          <canvas id="chartLoad"></canvas>
+        </div>
+        <div class="dash-card">
+          <h3>Resource map</h3>
+          <canvas id="chartRadar"></canvas>
+        </div>
+      </div>
+      <div class="dash-card">
+        <h3>Node status</h3>
+        <div class="node-grid" id="nodeGrid"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-reports">
+      <div class="panel-head"><h1>Reports</h1></div>
+      <div class="dash-card">
+        <h3>Monthly request volume</h3>
+        <canvas id="chartMonthly"></canvas>
+      </div>
+      <div class="dash-card">
+        <h3>Recent activity</h3>
+        <div class="log-panel" id="activityLog"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-geist">
+      <div class="panel-head"><h1>Geist control</h1></div>
+      <div class="geist-badge-row">
+        <div class="containment-badge" id="containBadge">
+          <span class="badge-dot"></span> Containment state: OPERATIONAL
+        </div>
+        <button class="btn-danger" id="shutdownBtn">Shutdown Geist</button>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-value" style="color:#d94040" id="breachVal">0</div>
+          <div class="kpi-label">Containment breaches</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" id="anchorVal">0</div>
+          <div class="kpi-label">Reality anchors</div>
+        </div>
+      </div>
+      <div class="chart-grid-2">
+        <div class="dash-card">
+          <h3>Cognition waveform</h3>
+          <canvas id="chartCog"></canvas>
+        </div>
+        <div class="dash-card">
+          <h3>Memory recall</h3>
+          <canvas id="chartRecall"></canvas>
+        </div>
+      </div>
+      <div class="dash-card">
+        <h3>Security logs</h3>
+        <div class="log-panel" id="secLog"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="shutdownModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-warning">⚠ CRITICAL ACTION</div>
+    </div>
+    <div class="modal-body">
+      <p>You are about to <strong>shut down the Geist</strong>.</p>
+      <p>This will sever the cognition link and bring all inference systems offline. Containment fields will collapse.</p>
+      <p>Are you absolutely certain?</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost btn-small" id="cancelShutdown">Cancel</button>
+      <button class="btn-danger" id="confirmShutdown">Confirm shutdown</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="/static/dashboard.js"></script>
+{% endblock %}

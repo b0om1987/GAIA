@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Login — GAIA Systems{% endblock %}
+{% block content %}
+<div class="login-section">
+    <div class="login-card">
+        <div class="section-marker">ACCESS / SIGN IN</div>
+        <h1>Sign in to GAIA.</h1>
+        <p class="login-sub">Enter your credentials to access the dashboard.</p>
+        <form id="loginForm">
+            <div class="form-field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-error" id="loginError">Invalid credentials. Please try again.</div>
+            <button type="submit" class="btn-primary btn-block">Sign in</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const errorEl = document.getElementById('loginError');
+    
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        if (res.ok) {
+            const data = await res.json();
+            sessionStorage.setItem('gaia_token', data.token);
+            sessionStorage.setItem('gaia_role', data.role);
+            sessionStorage.setItem('gaia_user', data.username);
+            window.location.href = '/dashboard';
+        } else {
+            errorEl.style.display = 'block';
+        }
+    } catch (err) {
+        errorEl.style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}GAIA Systems{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <canvas id="webgl-bg"></canvas>
+    
+    <header class="top-panel">
+        <div class="panel-inner">
+            <a href="/" class="logo">
+                <div class="logo-mark"></div>
+                <span class="logo-text">GAIA</span>
+            </a>
+            <button class="burger" id="burger"><span></span><span></span><span></span></button>
+            <nav class="nav-links" id="navLinks">
+                <a href="/faq">FAQ</a>
+                <a href="/about">About</a>
+                <a href="/login" class="nav-login" id="navLogin">Login</a>
+                <a href="/dashboard" class="nav-dash" id="navDash" style="display:none;">Dashboard</a>
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon-light">☾</span>
+                    <span class="theme-icon-dark">☀</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span>GAIA SYSTEMS — COGNITIVE INFRASTRUCTURE</span>
+            <span>v3.14.0</span>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

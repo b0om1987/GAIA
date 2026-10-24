@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}FAQ — GAIA Systems{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div class="section-marker">SUPPORT / FAQ</div>
+    <h1>Frequently asked questions.</h1>
+</div>
+<section class="section">
+    <div class="faq-list">
+        <div class="faq-item">
+            <button class="faq-question">What is "contained inference"? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Contained inference means every reasoning request executes inside an isolated cognitive sandbox with strict boundary enforcement. The model cannot access data from other sessions, other clients, or prior inference chains. This is the core of our security model.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">How is my data isolated from other clients? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Each client tenant runs on dedicated inference workers with hardware-level isolation. Memory pages are not shared between tenants, and all intermediate reasoning state is wiped after each request completes. We maintain zero-retention by default.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">What certifications does GAIA hold? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>GAIA is SOC 2 Type II certified, ISO 27001 compliant, and HIPAA-aligned. We undergo annual third-party penetration testing and provide audit logs for every API call upon request.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">How are model access controls managed? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>API keys are scoped per-project with configurable rate limits and model access tiers. Admin keys can be further restricted by IP allowlist. All key rotations are logged and reversible within 24 hours.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">What latency can I expect? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Median inference latency is 28ms for standard reasoning calls and 45ms for deep-chain inference. We guarantee sub-100ms p99 latency on all enterprise plans across all supported regions.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Can I run GAIA on-premises? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Yes. We offer a self-hosted deployment package for defense and regulated industries. The on-prem image includes the full inference engine, monitoring stack, and containment layer. Contact our team for deployment requirements.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">What happens if a node fails? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Our routing layer detects node failures within 200ms and redirects traffic to the nearest healthy node. In-flight requests are retried automatically. We maintain active-active redundancy across all regions.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Do you store my inference inputs? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>No. By default, all input payloads and intermediate reasoning state are purged immediately after the response is returned. You may optionally enable request logging for debugging, but logs are encrypted and auto-expire after 7 days.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">What is the Poltergeist model? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Poltergeist is GAIA's flagship reasoning engine. It uses adaptive depth allocation to dynamically adjust inference complexity based on input difficulty, resulting in lower average latency without sacrificing output quality on hard queries.</p></div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">How do I get support? <span class="faq-icon">+</span></button>
+            <div class="faq-answer"><p>Enterprise clients receive a dedicated Slack channel and 24/7 pager response. All other plans can file tickets through the dashboard support panel. Average first-response time is under 2 hours during business hours.</p></div>
+        </div>
+    </div>
+</section>
+{% endblock %}
